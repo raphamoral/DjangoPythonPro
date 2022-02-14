@@ -9,9 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os.path
+from functools import partial
 from pathlib import Path
-from decouple import config
+
+import dj_database_url
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast = bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS',cast=Csv())
 
 
 # Application definition
@@ -74,12 +77,10 @@ WSGI_APPLICATION = 'pypro.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
+default_db_url = f"sqlite:///{str(BASE_DIR / 'db.sqlite3')}"
+parse_database = partial(dj_database_url.parse,conn_max_age=600)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': config('DATABASE_URL', default=default_db_url, cast=parse_database)
 }
 
 
@@ -105,9 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -118,8 +119,49 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+AWS_ACCESS_KEY_ID = config('AWS_ACESS_KEY_ID')
+#STORAGE CONFIG IN S3 AWS
+if AWS_ACCESS_KEY_ID:
+    AWS_SECRET_ACCESS_KEY=config('AWS_SECRET_ACESS_KEY')
+    AWS_STORAGE_BUCKET_NAME=config ('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_OBJECT_PARAMETERS= {'CacheControl': 'max-age=86400',}
+    AWS_RELOAD_METADATA = True
+    AWS_AUTO_CREATE_BUCKET = False
+    AWS_QUERYSTRING_AUTH= True
+    AWS_S3_CUSTOM_DOMAIN = None
+    AWS_DEFAULT_ACL = 'private'
+    #Static Assets
+
+    STATICFILES_STORAGE= 's3_folder_storage.s3.StaticStorage'
+    STATIC_S3_PATH = 'static'
+    STATIC_ROOT = f'/{STATIC_S3_PATH}'
+    STATIC_URL = f'//s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/{STATIC_S3_PATH}'
+    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
+    # Upload Media Folder
+    DEFAULT_FILE_STORAGE = 's3_folder_storage.s3.DefaultStorage'
+    DEFAULT_S3_PATH = 'media'
+    MEDIA_ROOT = f'/{DEFAULT_S3_PATH}'
+    MEDIA_URL = f'//s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/{DEFAULT_S3_PATH}'
+    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
+    INSTALLED_APPS.append('s3_folder_storage')
+    INSTALLED_APPS.append('storages')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
