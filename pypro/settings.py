@@ -17,6 +17,8 @@ import dj_database_url
 from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.contrib.staticfiles import testing
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -114,7 +116,7 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 
 USE_TZ = True
-
+DJANGO_SETTINGS_MODULE=testing.settings
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
