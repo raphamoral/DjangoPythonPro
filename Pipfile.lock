@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e4ad03a7c597bee605ec8d8ecd57725bb0114a195e19ea77f57f14dffdc530d2"
+            "sha256": "93ee47f3b7d107f987824c2e0e2af4c8066a5270c41fe649e4b0fef9ee886bd1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -184,13 +184,6 @@
             ],
             "index": "pypi",
             "version": "==20.1.0"
-        },
-        "heroku3": {
-            "hashes": [
-                "sha256:59abb0c0f6fbf9ce25ee00fe07ae3ac8dd29a1100bb3ab4589e7bebdcc905c93"
-            ],
-            "index": "pypi",
-            "version": "==5.1.4"
         },
         "idna": {
             "hashes": [

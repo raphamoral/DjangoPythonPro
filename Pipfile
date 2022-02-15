@@ -14,7 +14,6 @@ dj-database-url = "*"
 psycopg2-binary = "*"
 django-s3-folder-storage = "*"
 python-dateutil = "*"
-heroku3 = "*"
 django-storages = "*"
 collectfast = "*"
 
