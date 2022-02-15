@@ -16,6 +16,7 @@ django-s3-folder-storage = "*"
 python-dateutil = "*"
 heroku3 = "*"
 django-storages = "*"
+collectfast = "*"
 
 [dev-packages]
 flake8 = "*"
