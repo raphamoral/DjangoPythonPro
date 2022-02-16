@@ -116,7 +116,7 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 
 USE_TZ = True
-DJANGO_SETTINGS_MODULE=testing.settings
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -129,7 +129,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 COLLECTFAST_ENABLED = False
 
-AWS_ACCESS_KEY_ID = config('AWS_ACESS_KEY_ID')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 #STORAGE CONFIG IN S3 AWS
 if AWS_ACCESS_KEY_ID:
     AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
