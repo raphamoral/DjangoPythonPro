@@ -16,6 +16,9 @@ django-s3-folder-storage = "*"
 python-dateutil = "*"
 django-storages = "*"
 collectfast = "*"
+starkbank = "*"
+datetime = "*"
+names = "*"
 
 [dev-packages]
 flake8 = "*"
