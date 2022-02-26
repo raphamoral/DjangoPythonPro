@@ -1,27 +1,27 @@
 import starkbank
 from datetime import datetime, timedelta
 import json
+
+from decouple import config
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import time
 import names
 from random import randint
-import asyncio
+
 private_key, public_key = starkbank.key.create("sample/destination/path")
-private_key_content = """"
+private_key_content = """
 -----BEGIN EC PRIVATE KEY-----
 MHQCAQEEIF7Jtu3zY5DjqiYz0A9yWo6TkUshPe1hQ51sWPSJCAjboAcGBSuBBAAK
 oUQDQgAE5Z30Y6Bb2foc91j1sk0IivZ1a86ykANMrY4hUBXeKEqOgSRN6VJmACdA
 9GweG8md6GId7mUGi7k+5UugjKjKxQ==
 -----END EC PRIVATE KEY-----
 """
-
 new_name = names.get_full_name()
 current_time = f'{(datetime.now())}'
 current_data_bank = current_time[0:9]
-print(current_data_bank)
-print(current_time)
+
 new_avenue = f'Avenida {names.get_full_name()},{randint(0, 15000)}'
 new_zip_code = f"{randint(0, 99999)}-{randint(0, 999)}"
 new_tax_id = f'{randint(0, 999)}.{randint(0, 999)}.{randint(0, 999)}-{randint(0, 99)}'
@@ -51,7 +51,7 @@ def sending_invoices_for_24_HRs():
         while (cont < number_boletos):
             invoices = starkbank.invoice.create([
                 starkbank.Invoice(
-                    amount=248000,
+                    amount=1000,
                     fine=2.5,
                     descriptions=[{'key': 'Winter', 'value': 'is comming!'}],
                     interest=1.3,
@@ -79,6 +79,11 @@ def invoice_taxs_and_transfer(payment_metod=str, amount=float):
         transfer_value = amount - boleto_emitido - boleto_liquidado
     elif payment_metod == 'TED':
         transfer_value = amount - ted_tax
+    elif payment_metod =='pix_qr_code':
+        transfer_value = amount - qr_code - pix_tax
+    elif payment_metod == 'error':
+        print("This is a mistake")
+        return ("Try again")
 
     return starkbank.transfer.create([
         starkbank.Transfer(
@@ -95,59 +100,27 @@ def invoice_taxs_and_transfer(payment_metod=str, amount=float):
     ])
 
 
-@csrf_exempt
-@require_POST
-def webhook_request(request):
-    jsondata = request.body
-    data = json.loads(jsondata)
-    for answer in data['form_response']['answers']:  # go through all the answers
-        type = answer['type']
-    return type
 
 
-def webhook_extracting_and_sending_transfer():
-    response = webhook_request()
+
+def webhook_extracting_and_sending_transfer(data_value):
+    response = data_value
 
     event = starkbank.event.parse(
         content=response.data.decode("utf-8"),
-        signature=response.headers["Digital-Signature"],
+        signature=response.headers["invoice"],
     )
-    status_paid = event(['type'])
+    status_paid_for_invoice = event(['status'])
+
     amount_value = event(['amount'])
-    if event.subscription == "transfer":
-        id_transfer = event(['id'])
-        if status_paid == 'processing':
-            time.sleep(300)
-            webget = starkbank.webhook.get(id_transfer)
-            webget_status = webget(['type'])
-            if webget_status == 'success':
-                payment_metod = 'pix_payment'
-
-
-
-        elif status_paid == 'sent':
-            time.sleep(300)
-            webget = starkbank.webhook.get(id_transfer)
-            webget_status = webget(['type'])
-            if webget_status == 'success':
-                payment_metod = 'TED'
-
-        else:
-            payment_metod = 'error'
-
-
-
-    elif event.subscription == "boleto":
-
-        if status_paid == 'paid':
-            payment_metod = "boleto"
-        else:
-            payment_metod = 'error'
-
-    elif event.subscription == "brcode-payment":
-        if status_paid == 'success':
-            payment_metod = "qr_code"
-        else:
-            payment_metod = 'error'
+    if status_paid_for_invoice =='paid':
+        payment_metod = 'pix_qr_code'
+        print('Invoice Paid, ok you are really  Lannister')
+        print(event)
+    else :
+        payment_metod = 'error'
+        print('This invoice is not paid, when are you gonna be a really Lannister?  ' )
+        print(event)
     return invoice_taxs_and_transfer(payment_metod, amount_value)
+
 

@@ -19,6 +19,8 @@ collectfast = "*"
 starkbank = "*"
 datetime = "*"
 names = "*"
+patterns = "*"
+ngrok = "*"
 
 [dev-packages]
 flake8 = "*"
