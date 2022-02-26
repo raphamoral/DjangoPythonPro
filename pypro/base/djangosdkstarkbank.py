@@ -12,11 +12,6 @@ from random import randint
 
 private_key, public_key = starkbank.key.create("sample/destination/path")
 private_key_content = """
------BEGIN EC PRIVATE KEY-----
-MHQCAQEEIF7Jtu3zY5DjqiYz0A9yWo6TkUshPe1hQ51sWPSJCAjboAcGBSuBBAAK
-oUQDQgAE5Z30Y6Bb2foc91j1sk0IivZ1a86ykANMrY4hUBXeKEqOgSRN6VJmACdA
-9GweG8md6GId7mUGi7k+5UugjKjKxQ==
------END EC PRIVATE KEY-----
 """
 new_name = names.get_full_name()
 current_time = f'{(datetime.now())}'
