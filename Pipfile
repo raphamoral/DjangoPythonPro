@@ -21,6 +21,7 @@ datetime = "*"
 names = "*"
 patterns = "*"
 ngrok = "*"
+django-braces = "*"
 
 [dev-packages]
 flake8 = "*"

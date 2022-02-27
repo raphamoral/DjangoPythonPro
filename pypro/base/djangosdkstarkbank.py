@@ -45,11 +45,11 @@ def sending_invoices_for_24_HRs():
     number_boletos = randint(8, 12)
     hours_inicial = 0.00
 
-    while hours_inicial <= 24:
-        cont=0
+   # while hours_inicial <= 24:
+   #     cont=0
 
-        while (cont < number_boletos):
-            invoices = starkbank.invoice.create([
+        #while (cont < number_boletos):
+    starkbank.invoice.create([
                 starkbank.Invoice(
                     amount=1000,
                     fine=2.5,
@@ -59,9 +59,9 @@ def sending_invoices_for_24_HRs():
                     tax_id="29.176.331/0001-69",
                 )
             ])
-            cont+=1
-        time.sleep(10800)
-        hours_inicial += 3.01
+    #        cont+=1
+    #    time.sleep(10800)
+    #    hours_inicial += 3.01
     return HttpResponse()
 
 

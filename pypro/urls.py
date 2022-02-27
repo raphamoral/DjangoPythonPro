@@ -18,12 +18,13 @@ from django.template.defaulttags import url
 from django.urls import path
 
 from pypro.base import views
-from pypro.base.views import home
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+  #  path(http://fa76-200-173-164-191.ngrok.io)
 
 
-    url(r'^api/webhook_request/$', views.webhook_request, name='webhook_request'),
+   # url(r'^api/webhook_request/$', views.webhook_request, name='webhook_request'),
 
 
 #path('',home ),
