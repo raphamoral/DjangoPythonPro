@@ -13,18 +13,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import request
 from django.template.defaulttags import url
-from django.urls import path
+from django.urls import path, re_path, include
 
 from pypro.base import views
+from pypro.base.views import webhook
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-  #  path(http://fa76-200-173-164-191.ngrok.io)
+    #path(r'^webhook/(page-(\d+)/)?$', webhook_request)
+#path('', views.webhook(request), name='webhook_request')
+   #
+   path('webhook/',views.webhook)
+   # path('webhook/', include('views.webohook_request'))
 
 
-   # url(r'^api/webhook_request/$', views.webhook_request, name='webhook_request'),
+ #  url('api/webhook_request', views.webhook_request, name='webhook_request'),
 
 
 #path('',home ),
